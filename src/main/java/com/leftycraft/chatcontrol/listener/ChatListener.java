@@ -48,7 +48,7 @@ public class ChatListener implements Listener {
     }
 
     // =========================================================================
-    // 1. Legacy Spigot Event (Used by PlayMoreSounds and other legacy plugins)
+    // 1. Legacy Spigot Event (Used by PlayMoreSounds and other plugins)
     // =========================================================================
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -121,29 +121,6 @@ public class ChatListener implements Listener {
         // Remove viewers who have chat disabled
         for (Audience toRemove : viewersToRemove) {
             event.viewers().remove(toRemove);
-        }
-    }
-
-    // =========================================================================
-    // 3. Native Chat Sound Delivery (Only for remaining valid viewers)
-    // =========================================================================
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onAsyncChatSound(AsyncChatEvent event) {
-        if (!plugin.getConfigManager().isSoundEnabled()) {
-            return;
-        }
-
-        Player sender = event.getPlayer();
-
-        for (Audience audience : event.viewers()) {
-            if (audience instanceof Player viewerPlayer) {
-                // Don't play sound if viewer has disabled chat (extra guard)
-                if (plugin.getDataManager().isChatDisabled(viewerPlayer.getUniqueId())) {
-                    continue;
-                }
-                plugin.getSoundManager().playChatSound(viewerPlayer);
-            }
         }
     }
 }
