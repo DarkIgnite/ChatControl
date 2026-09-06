@@ -1,0 +1,19 @@
+# Target folder
+target/
+*.jar
+*.class
+
+# IDE and Editor files
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log

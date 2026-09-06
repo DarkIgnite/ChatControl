@@ -1,0 +1,52 @@
+name: ChatControl
+version: '${project.version}'
+main: com.leftycraft.chatcontrol.ChatControlPlugin
+api-version: '1.21'
+author: Leftycraft
+description: Advanced Chat Control Plugin for Paper 1.21+ by Leftycraft
+softdepend: [PlayMoreSounds]
+
+commands:
+  chat:
+    description: Main ChatControl command
+    aliases: [chatcontrol, cc, chattoggle]
+    permission: chatcontrol.use
+    usage: /<command> [toggle|status|muteall|whitelist|clear|reload|help]
+
+permissions:
+  chatcontrol.use:
+    description: Allows using the basic /chat command and help
+    default: true
+  chatcontrol.toggle:
+    description: Allows players to toggle their chat visibility on/off
+    default: true
+  chatcontrol.status:
+    description: Allows viewing personal chat and server mute status
+    default: true
+  chatcontrol.bypass.muteall:
+    description: Allows chatting even when the entire server is muted
+    default: op
+  chatcontrol.bypass.toggle:
+    description: Messages from this sender bypass individual player chat mutes
+    default: op
+  chatcontrol.admin:
+    description: Full administrative access to ChatControl
+    default: op
+    children:
+      chatcontrol.admin.muteall: true
+      chatcontrol.admin.whitelist: true
+      chatcontrol.admin.clear: true
+      chatcontrol.admin.reload: true
+      chatcontrol.bypass.muteall: true
+  chatcontrol.admin.muteall:
+    description: Allows muting/unmuting server-wide chat
+    default: op
+  chatcontrol.admin.whitelist:
+    description: Allows managing the mute bypass whitelist
+    default: op
+  chatcontrol.admin.clear:
+    description: Allows clearing the public chat
+    default: op
+  chatcontrol.admin.reload:
+    description: Allows reloading ChatControl configuration and data
+    default: op

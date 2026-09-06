@@ -1,0 +1,73 @@
+# ==============================================================
+#                 ChatControl by Leftycraft
+#      Advanced Chat Toggle, Server Mute, & Sound Plugin
+#                  Paper 1.21+ Compatible
+# ==============================================================
+
+# Prefix for plugin messages
+prefix: "<gradient:#00d2ff:#3a7bd5>[LeftyChat]</gradient> &8» &r"
+
+# Sound settings when incoming chat messages arrive
+# Suara chat akan otomatis HANYA berbunyi untuk player yang chat-nya AKTIF.
+# Jika player mematikan chat (/chat toggle), suara chat TIDAK AKAN berbunyi.
+sound:
+  # Enable chat notification sound
+  enabled: true
+  # Sound key (Bukkit Sound / Minecraft Sound key)
+  # Examples: minecraft:entity.experience_orb.pickup, minecraft:block.note_block.bell, minecraft:entity.item.pickup
+  name: "minecraft:entity.experience_orb.pickup"
+  volume: 1.0
+  pitch: 1.0
+  # Only play sound for players who have their chat enabled
+  only-for-enabled-chat: true
+  # PlayMoreSounds integration support
+  playmoresounds-integration: true
+
+# Server Mute settings
+server-mute:
+  # Whether server mute persists across restarts
+  persist-state: true
+  # Allow players with chatcontrol.bypass.muteall to chat during mute
+  allow-permission-bypass: true
+
+# Clear chat settings
+clear-chat:
+  lines: 100
+
+# Messages configuration (Supports legacy color codes & and MiniMessage formatting <color>, <gradient>)
+messages:
+  chat-toggled-on: "&aChat dari pemain lain berhasil &lDIAKTIFKAN&a. Kamu sekarang dapat melihat pesan dan mendengar suara chat."
+  chat-toggled-off: "&cChat dari pemain lain berhasil &lDINONAKTIFKAN&c. Kamu hanya dapat melihat pesanmu sendiri &7(suara chat dinonaktifkan)&c."
+  server-muted-broadcast: "&c&l[SERVER MUTE] &fChat server telah &c&lDINONAKTIFKAN &foleh &e%admin%&f!"
+  server-unmuted-broadcast: "&a&l[SERVER MUTE] &fChat server telah &a&lDIAKTIFKAN &fkembali oleh &e%admin%&f!"
+  server-is-muted: "&cChat server saat ini sedang dinonaktifkan oleh staff! Hanya pemain yang di-whitelist yang dapat mengirim pesan."
+  whitelist-added: "&aPemain &e%player% &aberhasil ditambahkan ke daftar whitelist chat mute."
+  whitelist-removed: "&cPemain &e%player% &adihapus dari daftar whitelist chat mute."
+  whitelist-already-added: "&ePemain %player% sudah ada di dalam whitelist."
+  whitelist-not-found: "&ePemain %player% tidak ditemukan di daftar whitelist."
+  whitelist-list-header: "<gradient:#00d2ff:#3a7bd5>===== [ Whitelist Chat Mute ] =====</gradient>"
+  whitelist-list-empty: "&7Tidak ada pemain dalam whitelist."
+  whitelist-list-entry: "&8- &e%player% &7(UUID: %uuid%)"
+  whitelist-cleared: "&aSemua pemain di daftar whitelist telah dibersihkan."
+  chat-cleared-broadcast: "&6Chat publik telah dibersihkan oleh &e%admin%&6."
+  reload-success: "&aKonfigurasi dan data ChatControl berhasil dimuat ulang!"
+  no-permission: "&cKamu tidak memiliki izin untuk menggunakan perintah ini!"
+  player-only: "&cPerintah ini hanya dapat dijalankan oleh pemain dalam game!"
+  player-not-found: "&cPemain &e%player% &ctidak ditemukan!"
+  status-header: "<gradient:#00d2ff:#3a7bd5>===== [ Status ChatControl ] =====</gradient>"
+  status-personal-on: "&7Chat Pribadi: &a&lAKTIF &7(Menerima pesan & suara dari pemain lain)"
+  status-personal-off: "&7Chat Pribadi: &c&lNONAKTIF &7(Hanya melihat pesan diri sendiri)"
+  status-server-muted: "&7Status Server Chat: &c&lDIMUTE &7(Hanya staff & whitelist yang dapat chat)"
+  status-server-unmuted: "&7Status Server Chat: &a&lNORMAL &7(Semua pemain dapat chat)"
+  status-whitelist-yes: "&7Status Whitelist Kamu: &a&lTERDAFTAR &7(Bisa chat saat server mute)"
+  status-whitelist-no: "&7Status Whitelist Kamu: &c&lTIDAK TERDAFTAR"
+  help-header: "<gradient:#00d2ff:#3a7bd5>===== [ ChatControl by Leftycraft ] =====</gradient>"
+  help-toggle: "&e/chat toggle &7- Mengaktifkan / mematikan chat dari player lain"
+  help-status: "&e/chat status &7- Melihat status chat kamu dan server"
+  help-muteall: "&e/chat muteall [on|off] &7- Mengaktifkan / mematikan mute 1 server (Admin)"
+  help-whitelist-add: "&e/chat whitelist add <player> &7- Menambahkan player ke whitelist mute (Admin)"
+  help-whitelist-remove: "&e/chat whitelist remove <player> &7- Menghapus player dari whitelist mute (Admin)"
+  help-whitelist-list: "&e/chat whitelist list &7- Melihat daftar whitelist mute (Admin)"
+  help-whitelist-clear: "&e/chat whitelist clear &7- Menghapus semua whitelist (Admin)"
+  help-clear: "&e/chat clear &7- Membersihkan riwayat chat server (Admin)"
+  help-reload: "&e/chat reload &7- Memuat ulang konfigurasi & data (Admin)"
