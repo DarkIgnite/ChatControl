@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 public final class MessageUtil {
 
     private static final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
+    private static final Pattern LEGACY_COLOR_PATTERN = Pattern.compile("(?i)[&§]([0-9a-fk-or])");
     private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
     private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.builder()
             .character('&')
@@ -23,7 +24,9 @@ public final class MessageUtil {
     }
 
     /**
-     * Parse a message into an Adventure Component supporting both MiniMessage and Legacy color codes.
+     * Parse a message into an Adventure Component supporting both MiniMessage tags
+     * (<gradient>, <color>, etc.) and Legacy color codes (&a, &c, &l, &#rrggbb, etc.)
+     * even when mixed together in the same string.
      *
      * @param message Text string
      * @return Component
@@ -34,38 +37,73 @@ public final class MessageUtil {
             return Component.empty();
         }
 
-        // Convert legacy hex &#RRGGBB to MiniMessage <#RRGGBB> or legacy format
-        String formatted = translateHexColorCodes(message);
-
-        // If message contains MiniMessage tags like <color> or <gradient>
-        if (formatted.contains("<") && formatted.contains(">")) {
+        try {
+            // Convert legacy color codes (&c, &#ffffff) to MiniMessage tags (<red>, <#ffffff>)
+            String converted = convertLegacyToMiniMessage(message);
+            return MINI_MESSAGE.deserialize(converted);
+        } catch (Exception e) {
+            // Fallback to legacy serializer if MiniMessage fails
             try {
-                // First replace legacy color codes in the string to allow mixed formatting
-                Component legacyPart = LEGACY_SERIALIZER.deserialize(formatted);
-                String serialized = LegacyComponentSerializer.legacySection().serialize(legacyPart);
-                // Also parse MiniMessage tags
-                return MINI_MESSAGE.deserialize(formatted);
-            } catch (Exception ignored) {
-                // Fallback to legacy serializer
+                return LEGACY_SERIALIZER.deserialize(message);
+            } catch (Exception ex) {
+                return Component.text(message);
             }
         }
-
-        return LEGACY_SERIALIZER.deserialize(formatted);
     }
 
     /**
-     * Translates &#RRGGBB format.
+     * Converts all legacy & and § color codes and hex &#rrggbb codes into valid MiniMessage tags.
      */
     @NotNull
-    public static String translateHexColorCodes(@NotNull String message) {
-        Matcher matcher = HEX_PATTERN.matcher(message);
-        StringBuilder buffer = new StringBuilder(message.length() + 32);
-        while (matcher.find()) {
-            String hex = matcher.group(1);
-            matcher.appendReplacement(buffer, "<#" + hex + ">");
+    public static String convertLegacyToMiniMessage(@NotNull String input) {
+        if (input.isEmpty()) {
+            return "";
         }
-        matcher.appendTail(buffer);
-        return buffer.toString();
+
+        // 1. Convert hex format &#RRGGBB to <#RRGGBB>
+        Matcher hexMatcher = HEX_PATTERN.matcher(input);
+        StringBuilder hexBuffer = new StringBuilder(input.length() + 32);
+        while (hexMatcher.find()) {
+            hexMatcher.appendReplacement(hexBuffer, "<#" + hexMatcher.group(1).toLowerCase() + ">");
+        }
+        hexMatcher.appendTail(hexBuffer);
+        String step1 = hexBuffer.toString();
+
+        // 2. Convert standard legacy & and § color codes to MiniMessage tags
+        Matcher legacyMatcher = LEGACY_COLOR_PATTERN.matcher(step1);
+        StringBuilder legacyBuffer = new StringBuilder(step1.length() + 32);
+        while (legacyMatcher.find()) {
+            char code = Character.toLowerCase(legacyMatcher.group(1).charAt(0));
+            String tag = switch (code) {
+                case '0' -> "<black>";
+                case '1' -> "<dark_blue>";
+                case '2' -> "<dark_green>";
+                case '3' -> "<dark_aqua>";
+                case '4' -> "<dark_red>";
+                case '5' -> "<dark_purple>";
+                case '6' -> "<gold>";
+                case '7' -> "<gray>";
+                case '8' -> "<dark_gray>";
+                case '9' -> "<blue>";
+                case 'a' -> "<green>";
+                case 'b' -> "<aqua>";
+                case 'c' -> "<red>";
+                case 'd' -> "<light_purple>";
+                case 'e' -> "<yellow>";
+                case 'f' -> "<white>";
+                case 'k' -> "<obfuscated>";
+                case 'l' -> "<bold>";
+                case 'm' -> "<strikethrough>";
+                case 'n' -> "<underlined>";
+                case 'o' -> "<italic>";
+                case 'r' -> "<reset>";
+                default -> legacyMatcher.group(0);
+            };
+            legacyMatcher.appendReplacement(legacyBuffer, Matcher.quoteReplacement(tag));
+        }
+        legacyMatcher.appendTail(legacyBuffer);
+
+        return legacyBuffer.toString();
     }
 
     /**
