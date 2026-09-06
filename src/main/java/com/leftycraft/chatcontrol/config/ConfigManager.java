@@ -13,13 +13,6 @@ public class ConfigManager {
     private FileConfiguration config;
 
     private String prefix;
-    private boolean soundEnabled;
-    private String soundName;
-    private float soundVolume;
-    private float soundPitch;
-    private boolean soundOnlyForEnabledChat;
-    private boolean playMoreSoundsIntegration;
-
     private boolean serverMutePersistState;
     private boolean allowPermissionBypass;
     private int clearChatLines;
@@ -37,14 +30,6 @@ public class ConfigManager {
         this.config = plugin.getConfig();
 
         this.prefix = config.getString("prefix", "<gradient:#00d2ff:#3a7bd5>[LeftyChat]</gradient> &8» &r");
-
-        this.soundEnabled = config.getBoolean("sound.enabled", true);
-        this.soundName = config.getString("sound.name", "minecraft:entity.experience_orb.pickup");
-        this.soundVolume = (float) config.getDouble("sound.volume", 1.0);
-        this.soundPitch = (float) config.getDouble("sound.pitch", 1.0);
-        this.soundOnlyForEnabledChat = config.getBoolean("sound.only-for-enabled-chat", true);
-        this.playMoreSoundsIntegration = config.getBoolean("sound.playmoresounds-integration", true);
-
         this.serverMutePersistState = config.getBoolean("server-mute.persist-state", true);
         this.allowPermissionBypass = config.getBoolean("server-mute.allow-permission-bypass", true);
         this.clearChatLines = config.getInt("clear-chat.lines", 100);
@@ -60,31 +45,6 @@ public class ConfigManager {
     @NotNull
     public String getPrefix() {
         return prefix;
-    }
-
-    public boolean isSoundEnabled() {
-        return soundEnabled;
-    }
-
-    @NotNull
-    public String getSoundName() {
-        return soundName;
-    }
-
-    public float getSoundVolume() {
-        return soundVolume;
-    }
-
-    public float getSoundPitch() {
-        return soundPitch;
-    }
-
-    public boolean isSoundOnlyForEnabledChat() {
-        return soundOnlyForEnabledChat;
-    }
-
-    public boolean isPlayMoreSoundsIntegration() {
-        return playMoreSoundsIntegration;
     }
 
     public boolean isServerMutePersistState() {

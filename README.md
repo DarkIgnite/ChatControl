@@ -13,7 +13,7 @@
 1. **Per-Player Chat Toggle (Filter Chat Pribadi)**
    - Pemain dapat mematikan pesan publik dari pemain lain kapan saja (`/chat toggle` atau `/chat on`/`/chat off`).
    - Saat chat dimatikan, pemain **hanya melihat pesannya sendiri**, tanpa terganggu spam atau obrolan pemain lain di layar.
-   - **Sound Integration**: Suara notifikasi chat (termasuk kompatibilitas dengan PlayMoreSounds) hanya akan berbunyi jika fitur chat sedang aktif pada pemain tersebut. Jika pemain mematikan chat, tidak akan ada suara chat yang mengganggu.
+   - **PlayMoreSounds Integrated**: Terintegrasi otomatis dengan recipient filtering pada PlayMoreSounds.
 
 2. **Server-Wide Chat Mute (Admin Control)**
    - Admin/Staff dapat mengheningkan chat 1 server secara instan (`/chat muteall [on|off]`).
@@ -65,104 +65,14 @@
 
 ---
 
-### Daftar Permission Lengkap
-
-```yaml
-permissions:
-  chatcontrol.use:
-    description: Mengizinkan akses dasar command /chat
-    default: true
-  chatcontrol.toggle:
-    description: Mengizinkan pemain untuk /chat toggle, on, off
-    default: true
-  chatcontrol.status:
-    description: Mengizinkan pemain mengecek /chat status
-    default: true
-  chatcontrol.bypass.muteall:
-    description: Bebas mengirim pesan saat 1 server sedang di-mute
-    default: op
-  chatcontrol.bypass.toggle:
-    description: Pesan dari pengirim ini tetap muncul meskipun penerima mematikan chat
-    default: op
-  chatcontrol.bypass.clear:
-    description: Layar chat tidak ikut terhapus saat admin menjalankan /chat clear
-    default: op
-  chatcontrol.admin:
-    description: Izin penuh ke seluruh fitur admin ChatControl
-    default: op
-    children:
-      chatcontrol.admin.muteall: true
-      chatcontrol.admin.whitelist: true
-      chatcontrol.admin.clear: true
-      chatcontrol.admin.reload: true
-      chatcontrol.bypass.muteall: true
-```
-
----
-
-## ⚙️ Konfigurasi (`config.yml`)
-
-```yaml
-# Prefix pesan plugin
-prefix: "<gradient:#00d2ff:#3a7bd5>[LeftyChat]</gradient> &8» &r"
-
-# Pengaturan Suara Chat (Sound & PlayMoreSounds Integration)
-sound:
-  enabled: true
-  name: "minecraft:entity.experience_orb.pickup"
-  volume: 1.0
-  pitch: 1.0
-  # Suara hanya berbunyi untuk pemain yang chat-nya AKTIF
-  only-for-enabled-chat: true
-  playmoresounds-integration: true
-
-# Pengaturan Mute Server
-server-mute:
-  persist-state: true
-  allow-permission-bypass: true
-
-# Pengaturan Bersihkan Chat
-clear-chat:
-  lines: 100
-
-# Kustomisasi Pesan (Mendukung legacy & dan MiniMessage)
-messages:
-  chat-toggled-on: "&aChat dari pemain lain berhasil &lDIAKTIFKAN&a. Kamu sekarang dapat melihat pesan dan mendengar suara chat."
-  chat-toggled-off: "&cChat dari pemain lain berhasil &lDINONAKTIFKAN&c. Kamu hanya dapat melihat pesanmu sendiri &7(suara chat dinonaktifkan)&c."
-  server-muted-broadcast: "&c&l[SERVER MUTE] &fChat server telah &c&lDINONAKTIFKAN &foleh &e%admin%&f!"
-  server-unmuted-broadcast: "&a&l[SERVER MUTE] &fChat server telah &a&lDIAKTIFKAN &fkembali oleh &e%admin%&f!"
-  server-is-muted: "&cChat server saat ini sedang dinonaktifkan oleh staff! Hanya pemain yang di-whitelist yang dapat mengirim pesan."
-  whitelist-added: "&aPemain &e%player% &aberhasil ditambahkan ke daftar whitelist chat mute."
-  whitelist-removed: "&cPemain &e%player% &adihapus dari daftar whitelist chat mute."
-  ...
-```
-
----
-
 ## 🔨 Cara Build & Install
 
-### Persyaratan
-- **Java 21** atau yang lebih baru
-- **Paper / Purpur / Folia 1.21+** (1.21.x, 1.21.4, 1.21.8+)
-- **Maven 3.8+**
-
-### Kompilasi dari Source Code
 ```bash
-# Clone repository
 git clone https://github.com/DarkIgnite/ChatControl.git
-
-# Masuk ke direktori
 cd ChatControl
-
-# Build file .jar
 mvn clean package
 ```
 File JAR yang sudah siap pakai akan berada di direktori `target/ChatControl-1.0.0.jar`.
-
-### Instalasi di Server
-1. Salin `ChatControl-1.0.0.jar` ke folder `plugins/` server Paper Anda.
-2. Restart server atau muat plugin.
-3. Sesuaikan konfigurasi di `plugins/ChatControl/config.yml` sesuai kebutuhan Anda.
 
 ---
 
