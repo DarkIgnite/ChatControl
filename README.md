@@ -11,9 +11,9 @@
 ## ✨ Fitur Utama
 
 1. **Per-Player Chat Toggle (Filter Chat Pribadi)**
-   - Pemain dapat mematikan pesan publik dari pemain lain kapan saja (`/chat toggle` atau `/chat on`/`/chat off`).
-   - Saat chat dimatikan, pemain **hanya melihat pesannya sendiri**, tanpa terganggu spam atau obrolan pemain lain di layar.
-   - **PlayMoreSounds Integrated**: Terintegrasi otomatis dengan recipient filtering pada PlayMoreSounds.
+   - Pemain dapat mematikan chat kapan saja (`/chat toggle` atau `/chat on`/`/chat off`).
+   - **Self-Chat Prevention saat Off:** Saat chat dimatikan (`/chat off`), pemain tidak dapat mengirim pesan chat dan akan muncul pesan peringatan untuk mengaktifkan chat terlebih dahulu menggunakan `/chat on`.
+   - **PlayMoreSounds Integrated**: Terintegrasi otomatis dengan recipient filtering pada PlayMoreSounds sehingga saat chat dimatikan, tidak ada suara chat yang masuk.
 
 2. **Server-Wide Chat Mute (Admin Control)**
    - Admin/Staff dapat mengheningkan chat 1 server secara instan (`/chat muteall [on|off]`).
@@ -43,9 +43,9 @@
 
 | Perintah | Alias | Izin (Permission) | Default | Deskripsi |
 | :--- | :--- | :--- | :--- | :--- |
-| `/chat` / `/chat toggle` | `/chattoggle`, `/cc` | `chatcontrol.toggle` | `Semua Player` | Mengaktifkan/menonaktifkan chat pemain lain |
+| `/chat` / `/chat toggle` | `/chattoggle`, `/cc` | `chatcontrol.toggle` | `Semua Player` | Mengaktifkan/menonaktifkan chat |
 | `/chat on` | - | `chatcontrol.toggle` | `Semua Player` | Mengaktifkan chat publik |
-| `/chat off` | - | `chatcontrol.toggle` | `Semua Player` | Menonaktifkan chat publik (hanya lihat pesan sendiri) |
+| `/chat off` | - | `chatcontrol.toggle` | `Semua Player` | Menonaktifkan chat publik |
 | `/chat status` | - | `chatcontrol.status` | `Semua Player` | Melihat status chat pribadi, status server mute, & whitelist |
 | `/chat help` | - | `chatcontrol.use` | `Semua Player` | Menampilkan menu bantuan perintah |
 

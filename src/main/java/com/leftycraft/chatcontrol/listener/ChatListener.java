@@ -18,6 +18,7 @@ public class ChatListener implements Listener {
 
     private final ChatControlPlugin plugin;
     private final Map<UUID, Long> lastMuteAlertTime = new ConcurrentHashMap<>();
+    private final Map<UUID, Long> lastDisabledChatAlertTime = new ConcurrentHashMap<>();
 
     public ChatListener(@NotNull ChatControlPlugin plugin) {
         this.plugin = plugin;
@@ -47,6 +48,16 @@ public class ChatListener implements Listener {
         }
     }
 
+    private void sendDisabledChatAlertIfNeeded(@NotNull Player sender) {
+        long now = System.currentTimeMillis();
+        Long lastTime = lastDisabledChatAlertTime.get(sender.getUniqueId());
+        if (lastTime == null || (now - lastTime) > 800) {
+            lastDisabledChatAlertTime.put(sender.getUniqueId(), now);
+            String msg = plugin.getConfigManager().getMessage("chat-disabled-warning");
+            MessageUtil.sendMessage(sender, plugin.getConfigManager().getPrefix(), msg);
+        }
+    }
+
     // =========================================================================
     // 1. Legacy Spigot Event (Used by PlayMoreSounds and other plugins)
     // =========================================================================
@@ -63,6 +74,17 @@ public class ChatListener implements Listener {
             } catch (UnsupportedOperationException ignored) {
             }
             sendMuteAlertIfNeeded(sender);
+            return;
+        }
+
+        // Check if sender themselves has chat disabled
+        if (plugin.getDataManager().isChatDisabled(sender.getUniqueId())) {
+            event.setCancelled(true);
+            try {
+                event.getRecipients().clear();
+            } catch (UnsupportedOperationException ignored) {
+            }
+            sendDisabledChatAlertIfNeeded(sender);
             return;
         }
 
@@ -96,6 +118,17 @@ public class ChatListener implements Listener {
             } catch (UnsupportedOperationException ignored) {
             }
             sendMuteAlertIfNeeded(sender);
+            return;
+        }
+
+        // Check if sender themselves has chat disabled
+        if (plugin.getDataManager().isChatDisabled(sender.getUniqueId())) {
+            event.setCancelled(true);
+            try {
+                event.viewers().clear();
+            } catch (UnsupportedOperationException ignored) {
+            }
+            sendDisabledChatAlertIfNeeded(sender);
             return;
         }
 

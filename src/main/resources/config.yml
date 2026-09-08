@@ -21,7 +21,8 @@ clear-chat:
 # Messages configuration (Supports legacy color codes & and MiniMessage formatting <color>, <gradient>)
 messages:
   chat-toggled-on: "&aChat dari pemain lain berhasil &lDIAKTIFKAN&a. Kamu sekarang dapat melihat pesan dari pemain lain."
-  chat-toggled-off: "&cChat dari pemain lain berhasil &lDINONAKTIFKAN&c. Kamu hanya dapat melihat pesanmu sendiri."
+  chat-toggled-off: "&cChat dari pemain lain berhasil &lDINONAKTIFKAN&c. Kamu tidak dapat melihat atau mengirim chat."
+  chat-disabled-warning: "&cKamu tidak dapat mengirim pesan karena chat kamu sedang &lDINONAKTIFKAN&c! Gunakan &e/chat on &cuntuk mengaktifkannya kembali."
   server-muted-broadcast: "&c&l[SERVER MUTE] &fChat server telah &c&lDINONAKTIFKAN &foleh &e%admin%&f!"
   server-unmuted-broadcast: "&a&l[SERVER MUTE] &fChat server telah &a&lDIAKTIFKAN &fkembali oleh &e%admin%&f!"
   server-is-muted: "&cChat server saat ini sedang dinonaktifkan oleh staff! Hanya pemain yang di-whitelist yang dapat mengirim pesan."
@@ -40,7 +41,7 @@ messages:
   player-not-found: "&cPemain &e%player% &ctidak ditemukan!"
   status-header: "<gradient:#00d2ff:#3a7bd5>===== [ Status ChatControl ] =====</gradient>"
   status-personal-on: "&7Chat Pribadi: &a&lAKTIF &7(Menerima pesan dari pemain lain)"
-  status-personal-off: "&7Chat Pribadi: &c&lNONAKTIF &7(Hanya melihat pesan diri sendiri)"
+  status-personal-off: "&7Chat Pribadi: &c&lNONAKTIF &7(Chat dimatikan total)"
   status-server-muted: "&7Status Server Chat: &c&lDIMUTE &7(Hanya staff & whitelist yang dapat chat)"
   status-server-unmuted: "&7Status Server Chat: &a&lNORMAL &7(Semua pemain dapat chat)"
   status-whitelist-yes: "&7Status Whitelist Kamu: &a&lTERDAFTAR &7(Bisa chat saat server mute)"
