@@ -3,8 +3,10 @@ package com.leftycraft.chatcontrol;
 import com.leftycraft.chatcontrol.command.ChatCommand;
 import com.leftycraft.chatcontrol.config.ConfigManager;
 import com.leftycraft.chatcontrol.data.DataManager;
+import com.leftycraft.chatcontrol.hook.ChatControlExpansion;
 import com.leftycraft.chatcontrol.listener.ChatListener;
 import com.leftycraft.chatcontrol.listener.PlayerConnectionListener;
+import com.leftycraft.chatcontrol.listener.SystemMessagePacketListener;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -36,6 +38,17 @@ public final class ChatControlPlugin extends JavaPlugin {
         // Register event listeners
         getServer().getPluginManager().registerEvents(new ChatListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerConnectionListener(this), this);
+
+        // Register PlaceholderAPI expansion if present
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new ChatControlExpansion(this).register();
+            getLogger().info("Hooked into PlaceholderAPI expansion (%chatcontrol_status%, %chatcontrol_system%).");
+        }
+
+        // Register ProtocolLib packet listener if present
+        if (getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
+            SystemMessagePacketListener.register(this);
+        }
 
         getLogger().info("========================================");
         getLogger().info(" ChatControl v" + getPluginMeta().getVersion() + " by Leftycraft");

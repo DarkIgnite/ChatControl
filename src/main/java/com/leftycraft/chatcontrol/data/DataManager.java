@@ -21,6 +21,9 @@ public class DataManager {
     // UUIDs of players who have disabled public chat (only want to see own chat)
     private final Set<UUID> disabledChatPlayers = ConcurrentHashMap.newKeySet();
 
+    // UUIDs of players who have hidden system messages (AutoMessage, Clan War, Dungeon, ChatGames)
+    private final Set<UUID> disabledSystemPlayers = ConcurrentHashMap.newKeySet();
+
     // Global server mute state
     private boolean serverMuted = false;
 
@@ -51,6 +54,16 @@ public class DataManager {
         for (String uuidStr : disabledList) {
             try {
                 disabledChatPlayers.add(UUID.fromString(uuidStr));
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
+
+        // Load disabled system messages players
+        disabledSystemPlayers.clear();
+        List<String> disabledSysList = dataConfig.getStringList("disabled-system-players");
+        for (String uuidStr : disabledSysList) {
+            try {
+                disabledSystemPlayers.add(UUID.fromString(uuidStr));
             } catch (IllegalArgumentException ignored) {
             }
         }
@@ -86,6 +99,12 @@ public class DataManager {
             disabledList.add(uuid.toString());
         }
         dataConfig.set("disabled-chat-players", disabledList);
+
+        List<String> disabledSysList = new ArrayList<>();
+        for (UUID uuid : disabledSystemPlayers) {
+            disabledSysList.add(uuid.toString());
+        }
+        dataConfig.set("disabled-system-players", disabledSysList);
         dataConfig.set("server-muted", serverMuted);
 
         dataConfig.set("whitelist", null); // clear
@@ -125,6 +144,31 @@ public class DataManager {
             disabledChatPlayers.add(uuid);
         } else {
             disabledChatPlayers.remove(uuid);
+        }
+        saveDataAsync();
+    }
+
+    public boolean isSystemDisabled(@NotNull UUID uuid) {
+        return disabledSystemPlayers.contains(uuid);
+    }
+
+    public boolean toggleSystem(@NotNull UUID uuid) {
+        if (disabledSystemPlayers.contains(uuid)) {
+            disabledSystemPlayers.remove(uuid);
+            saveDataAsync();
+            return true; // Now enabled
+        } else {
+            disabledSystemPlayers.add(uuid);
+            saveDataAsync();
+            return false; // Now disabled
+        }
+    }
+
+    public void setSystemDisabled(@NotNull UUID uuid, boolean disabled) {
+        if (disabled) {
+            disabledSystemPlayers.add(uuid);
+        } else {
+            disabledSystemPlayers.remove(uuid);
         }
         saveDataAsync();
     }

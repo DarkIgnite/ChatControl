@@ -83,6 +83,14 @@ public class ChatCommand implements CommandExecutor, TabCompleter {
                 }
                 handleStatus(sender);
             }
+            case "system", "sys", "pesansistem" -> {
+                if (!(sender instanceof Player player)) {
+                    sendMsg(sender, "player-only");
+                    return true;
+                }
+                String mode = (args.length > 1) ? args[1].toLowerCase() : "toggle";
+                handleSystem(player, mode);
+            }
             case "muteall", "servermute", "globalmute" -> {
                 if (!sender.hasPermission("chatcontrol.admin.muteall") && !sender.hasPermission("chatcontrol.admin")) {
                     sendMsg(sender, "no-permission");
@@ -134,6 +142,34 @@ public class ChatCommand implements CommandExecutor, TabCompleter {
             sendMsg(player, "chat-toggled-on");
         } else {
             sendMsg(player, "chat-toggled-off");
+        }
+    }
+
+    private void handleSystem(@NotNull Player player, @NotNull String mode) {
+        boolean nowEnabled;
+        if (mode.equalsIgnoreCase("on") || mode.equalsIgnoreCase("enable")) {
+            plugin.getDataManager().setSystemDisabled(player.getUniqueId(), false);
+            nowEnabled = true;
+        } else if (mode.equalsIgnoreCase("off") || mode.equalsIgnoreCase("disable")) {
+            plugin.getDataManager().setSystemDisabled(player.getUniqueId(), true);
+            nowEnabled = false;
+        } else {
+            nowEnabled = plugin.getDataManager().toggleSystem(player.getUniqueId());
+        }
+
+        // Sync with ChatGames if installed (via reflection)
+        try {
+            org.bukkit.plugin.Plugin cg = Bukkit.getPluginManager().getPlugin("ChatGames");
+            if (cg != null && cg.isEnabled()) {
+                Object gm = cg.getClass().getMethod("getGameManager").invoke(cg);
+                gm.getClass().getMethod("toggleGames", Player.class, boolean.class).invoke(gm, player, nowEnabled);
+            }
+        } catch (Throwable ignored) {}
+
+        if (nowEnabled) {
+            sendMsg(player, "system-enabled");
+        } else {
+            sendMsg(player, "system-disabled");
         }
     }
 
@@ -304,6 +340,7 @@ public class ChatCommand implements CommandExecutor, TabCompleter {
     private void sendHelp(@NotNull CommandSender sender) {
         MessageUtil.sendRawMessage(sender, plugin.getConfigManager().getMessage("help-header"));
         MessageUtil.sendRawMessage(sender, plugin.getConfigManager().getMessage("help-toggle"));
+        MessageUtil.sendRawMessage(sender, plugin.getConfigManager().getMessage("help-system"));
         MessageUtil.sendRawMessage(sender, plugin.getConfigManager().getMessage("help-status"));
 
         boolean isAdmin = sender.hasPermission("chatcontrol.admin");
@@ -335,7 +372,7 @@ public class ChatCommand implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
 
         if (args.length == 1) {
-            List<String> options = new ArrayList<>(List.of("toggle", "on", "off", "status", "help"));
+            List<String> options = new ArrayList<>(List.of("toggle", "on", "off", "system", "status", "help"));
             if (sender.hasPermission("chatcontrol.admin") || sender.hasPermission("chatcontrol.admin.muteall")) {
                 options.add("muteall");
             }
@@ -358,6 +395,15 @@ public class ChatCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("system") || args[0].equalsIgnoreCase("sys")) {
+                for (String opt : List.of("on", "off", "toggle")) {
+                    if (opt.toLowerCase().startsWith(args[1].toLowerCase())) {
+                        completions.add(opt);
+                    }
+                }
+                return completions;
+            }
+
             if (args[0].equalsIgnoreCase("muteall")) {
                 for (String opt : List.of("on", "off", "toggle")) {
                     if (opt.toLowerCase().startsWith(args[1].toLowerCase())) {
